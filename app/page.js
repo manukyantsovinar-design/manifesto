@@ -1,11 +1,33 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { M, Stage, Wordmark, Headline, Sub, Cta } from './Shell';
+import { M, Stage, Wordmark, Headline, Sub, Cta, useIsMobile } from './Shell';
+import { MPage, MWordmark, MHeadline, MSub, MCta } from './Mobile';
 
 export default function Landing() {
   const router = useRouter();
   const go = () => router.push('/write');
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <MPage>
+        <MWordmark />
+        <MHeadline>Write it Down</MHeadline>
+        <MSub>Before it&rsquo;s gone</MSub>
+        <img src={M.img + 'envelope-open-card.png'} alt="" style={{ display: 'block', width: '100%', maxWidth: 320, margin: '24px auto 0', filter: 'drop-shadow(5px 5px 20px rgba(0,0,0,0.2))' }} />
+        <div style={{ background: M.sky, borderRadius: 12, padding: '20px 22px', maxWidth: 320, margin: '20px auto 0', textAlign: 'center', fontFamily: M.hand, fontSize: 17, lineHeight: '25px', letterSpacing: '0.06em', color: M.ink }}>
+          Write down your crazy ideas and dreams here. I will make sure you follow through them...
+        </div>
+        <button onClick={go} title="Write my letter" style={{ display: 'block', margin: '24px auto 0', width: 84, height: 84, padding: 0, border: 0, borderRadius: '50%', background: 'transparent', cursor: 'pointer' }}>
+          <img src={M.img + 'wax-seal-sun.png'} alt="Press the seal to begin" style={{ display: 'block', width: '100%', height: '100%', filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.25))' }} />
+        </button>
+        <div style={{ marginTop: 32 }}>
+          <MCta label="Write my letter" onClick={go} />
+        </div>
+      </MPage>
+    );
+  }
 
   return (
     <Stage height={1024}>

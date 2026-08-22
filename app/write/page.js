@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { M, Stage, Wordmark, Headline, Sub, Paper, Field, Cta, ruleStyle } from '../Shell';
+import { M, Stage, Wordmark, Headline, Sub, Paper, Field, Cta, ruleStyle, useIsMobile } from '../Shell';
+import { MPage, MWordmark, MHeadline, MSub, MPaper, MField, MCta } from '../Mobile';
 import Sealing from '../Sealing';
 
 const DREAMS = [
@@ -21,6 +22,7 @@ export default function WriteLetter() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [token, setToken] = useState(null);
+  const isMobile = useIsMobile();
 
   const set = k => e => setLetter({ ...letter, [k]: e.target.value });
   const ready = letter.name.trim() && letter.want.trim() && /.+@.+\..+/.test(letter.email) && letter.consent;
@@ -49,6 +51,38 @@ export default function WriteLetter() {
 
   if (sealing) {
     return <Sealing onDone={() => router.push('/sealed/' + token)} />;
+  }
+
+  if (isMobile) {
+    return (
+      <MPage>
+        <MWordmark />
+        <MHeadline>Take your time</MHeadline>
+        <MSub>You&apos;ll write one short letter to yourself. What do you want, why you want it, and what you&apos;re willing to give for it. Once a month I will check up on you.</MSub>
+        <form onSubmit={seal}>
+          <MPaper>
+            <div style={{ marginBottom: 26 }}>
+              <label style={{ display: 'block', fontFamily: M.alice, fontSize: 14, letterSpacing: '0.05em', color: M.navy, marginBottom: 8 }}>Dear</label>
+              <input value={letter.name} onChange={set('name')} placeholder="Your name" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: 0, border: 0, outline: 'none', background: 'transparent', fontFamily: M.hand, fontSize: 20, letterSpacing: '0.06em', color: M.ink }} />
+              <div style={{ height: 0, borderTop: '0.5px solid rgba(64,45,43,0.3)', marginTop: 8 }} />
+            </div>
+            {DREAMS.map(d => (
+              <MField key={d.key} title={d.title} hint={d.hint} placeholder={d.placeholder} value={letter[d.key]} onChange={set(d.key)} />
+            ))}
+            <span style={{ display: 'block', fontFamily: M.aleo, fontSize: 13, letterSpacing: '0.05em', color: M.navy, marginBottom: 10 }}>Where should your monthly check-in land?</span>
+            <input type="email" value={letter.email} onChange={set('email')} placeholder="you@gmail.com" style={{ display: 'block', width: '100%', boxSizing: 'border-box', height: 44, padding: '0 16px', borderRadius: 50, border: 0, outline: 'none', background: '#fff', boxShadow: '0 0 0 2.5px ' + M.sky, fontFamily: M.aleo, fontSize: 14, color: 'rgba(64,45,43,0.9)', marginBottom: 16 }} />
+            <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 14 }}>
+              <input id="consent-m" type="checkbox" checked={letter.consent} onChange={e => setLetter({ ...letter, consent: e.target.checked })} style={{ width: 18, height: 18, margin: '2px 0 0', accentColor: M.navy, flex: '0 0 auto' }} />
+              <label htmlFor="consent-m" style={{ fontFamily: M.aleo, fontSize: 13, lineHeight: '19px', color: 'rgba(64,45,43,0.9)' }}>Once a month, send me three small questions about this dream — and remind me what I wrote here.</label>
+            </div>
+            <span style={{ display: 'block', fontFamily: M.aleo, fontStyle: 'italic', fontWeight: 300, fontSize: 11, color: 'rgba(64,45,43,0.7)', marginBottom: 8 }}>Nothing is shared. This letter is only yours.</span>
+            {touched && !ready && <span style={{ display: 'block', fontFamily: M.aleo, fontSize: 12, color: '#7C2B2B', marginBottom: 8 }}>Your name, the first answer, an email address and the monthly note — then it can be sealed.</span>}
+            {error && <span style={{ display: 'block', fontFamily: M.aleo, fontSize: 12, color: '#7C2B2B', marginBottom: 8 }}>{error}</span>}
+          </MPaper>
+          <MCta type="submit" label={submitting ? 'Sealing…' : 'Seal my letter'} onClick={seal} disabled={submitting} />
+        </form>
+      </MPage>
+    );
   }
 
   return (

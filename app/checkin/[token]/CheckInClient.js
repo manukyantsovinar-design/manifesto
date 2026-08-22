@@ -1,7 +1,8 @@
 'use client';
 
 import { useLayoutEffect, useRef, useState } from 'react';
-import { M, Stage, Wordmark, Headline, Sub, Paper, Field, Cta } from '../../Shell';
+import { M, Stage, Wordmark, Headline, Sub, Paper, Field, Cta, useIsMobile } from '../../Shell';
+import { MPage, MWordmark, MHeadline, MSub, MPaper, MField, MCta } from '../../Mobile';
 
 const QUESTIONS = [
   { key: 'moved', title: 'What has moved since last time?', hint: 'Any small steps count.', placeholder: 'I started...' },
@@ -68,8 +69,70 @@ function LetterSheet({ letter, checkins, onHeight }) {
   );
 }
 
+/* Same content as LetterSheet, in normal document flow for mobile. */
+function MLetterSheet({ letter, checkins }) {
+  const label = { fontFamily: M.alice, fontSize: 13, letterSpacing: '0.05em', color: 'rgba(15,60,102,0.55)' };
+  const hand = { fontFamily: M.hand, fontSize: 17, lineHeight: '25px', letterSpacing: '0.05em', color: M.ink, whiteSpace: 'pre-wrap', margin: '4px 0 0' };
+  const rows = [['This is what I want', letter.want], ['This is why I want it so badly', letter.why], ['This is what I am willing to give', letter.give]];
+  const archiveRows = [
+    ['What has moved', 'moved'],
+    ['What got in the way', 'blocked'],
+    ['The next step', 'next_step']
+  ];
+  return (
+    <MPaper>
+      <div style={{ ...hand, margin: 0 }}>Dear, {letter.name || 'Name'}</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginTop: 8 }}>
+        {rows.map(([t, v]) => (
+          <div key={t}>
+            <div style={label}>{t}</div>
+            <p style={hand}>{v || '—'}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 30, fontFamily: M.hand, fontSize: 13, letterSpacing: '0.06em', color: 'rgba(64,45,43,0.75)' }}>Sealed {fmtDate(letter.created_at)}</div>
+
+      {checkins.length > 0 && (
+        <div style={{ marginTop: 28 }}>
+          <div style={{ ...label, fontSize: 14, marginBottom: 16 }}>Your check-ins so far</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+            {checkins.map(c => (
+              <div key={c.id} style={{ borderTop: '0.5px solid rgba(64,45,43,0.2)', paddingTop: 14 }}>
+                <div style={{ fontFamily: M.aleo, fontSize: 10, fontStyle: 'italic', color: 'rgba(64,45,43,0.6)', marginBottom: 8 }}>{fmtDate(c.created_at)}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {archiveRows.map(([t, k]) => (
+                    <div key={k}>
+                      <div style={{ ...label, fontSize: 11 }}>{t}</div>
+                      <p style={{ ...hand, fontSize: 15, lineHeight: '22px' }}>{c[k] || '—'}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </MPaper>
+  );
+}
+
 function CheckInDone({ letter, checkins }) {
   const [d, setD] = useState(0);
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <MPage>
+        <MWordmark />
+        <MHeadline>See you next time, {letter.name || 'Name'}</MHeadline>
+        <MSub>You wrote this to yourself</MSub>
+        <MLetterSheet letter={letter} checkins={checkins} />
+        <p style={{ margin: '8px 0 12px', textAlign: 'center', fontFamily: M.hand, fontSize: 32, letterSpacing: '0.05em', color: M.ink }}>Noted, and kept.</p>
+        <MSub>One step is enough for this month. We&rsquo;ll knock again in thirty days.</MSub>
+      </MPage>
+    );
+  }
+
   return (
     <Stage height={1024 + d}>
       <Wordmark />
@@ -88,6 +151,7 @@ export default function CheckInClient({ letter, checkins, token }) {
   const [done, setDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const isMobile = useIsMobile();
 
   const set = k => e => setAnswers({ ...answers, [k]: e.target.value });
 
@@ -116,6 +180,28 @@ export default function CheckInClient({ letter, checkins, token }) {
 
   if (done) {
     return <CheckInDone letter={letter} checkins={[{ id: 'new', created_at: new Date().toISOString(), ...answers }, ...checkins]} />;
+  }
+
+  if (isMobile) {
+    return (
+      <MPage>
+        <MWordmark />
+        <MHeadline>Hello again, {letter.name || 'Name'}</MHeadline>
+        <MSub>You wrote this to yourself</MSub>
+        <MLetterSheet letter={letter} checkins={checkins} />
+        <MSub>Now answer these 3 questions.</MSub>
+        <form onSubmit={save}>
+          <MPaper>
+            {QUESTIONS.map(q => (
+              <MField key={q.key} title={q.title} hint={q.hint} placeholder={q.placeholder} value={answers[q.key]} onChange={set(q.key)} />
+            ))}
+            {error && <span style={{ display: 'block', fontFamily: M.aleo, fontSize: 12, color: '#7C2B2B', marginBottom: 8 }}>{error}</span>}
+          </MPaper>
+          <MCta type="submit" label={submitting ? 'Saving…' : 'Save this check-in'} onClick={save} disabled={submitting} />
+        </form>
+        <a href={`/sealed/${token}`} style={{ display: 'block', textAlign: 'center', marginTop: 24, fontFamily: M.alice, fontSize: 14, letterSpacing: '0.05em', color: M.navy, textDecoration: 'underline', textUnderlineOffset: '4px' }}>Go back to printable letter</a>
+      </MPage>
+    );
   }
 
   return (

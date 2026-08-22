@@ -10,6 +10,6 @@ export async function GET(req, { params }) {
        <p style="font-size:18px;">You won&rsquo;t get the monthly note anymore.</p>
        <p style="font-size:14px;color:rgba(64,45,43,0.7);">Your letter is still safe, if you ever want to come back to it.</p>
      </body></html>`,
-    { headers: { 'Content-Type': 'text/html' } }
+    { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
   );
 }

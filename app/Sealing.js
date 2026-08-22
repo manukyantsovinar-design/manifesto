@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { M, Stage, Wordmark, Headline } from './Shell';
+import { M, Stage, Wordmark, Headline, useIsMobile } from './Shell';
+import { MPage, MWordmark, MHeadline } from './Mobile';
 
 /* The sealing ceremony as a cross-fade: the open envelope with the blue card
    dissolves into the card slipping further in, then into the closed envelope,
@@ -26,6 +27,35 @@ export default function Sealing({ onDone }) {
   }, [onDone]);
 
   const shown = CUES.reduce((acc, c, i) => (t >= c ? i : acc), 0);
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <MPage>
+        <MWordmark />
+        <MHeadline>Almost there...</MHeadline>
+        <div style={{ position: 'relative', width: '100%', maxWidth: 300, aspectRatio: '1', margin: '32px auto 0' }}>
+          {FRAMES.map((f, i) => (
+            <img key={f.src} src={M.img + f.src} alt="" style={{
+              position: 'absolute', left: '50%', top: '50%', width: '90%', height: 'auto',
+              transform: 'translate(-50%,-50%)',
+              filter: 'drop-shadow(5px 8px 20px rgba(0,0,0,0.22))',
+              opacity: i === shown ? 1 : 0,
+              transition: 'opacity ' + (i === shown ? 420 : FADE) + 'ms ease-out'
+            }} />
+          ))}
+          <img src={M.img + 'wax-seal-sun.png'} alt="" style={{
+            position: 'absolute', left: '50%', top: '50%', width: '32%', height: 'auto',
+            transform: 'translate(-50%,-50%) scale(' + (t >= SEAL_AT ? 1 : 0.9) + ')',
+            filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.25))',
+            opacity: t >= SEAL_AT ? 1 : 0,
+            transition: 'opacity 320ms ease-out, transform 420ms ease-out'
+          }} />
+        </div>
+      </MPage>
+    );
+  }
+
   return (
     <Stage height={1024}>
       <Wordmark />

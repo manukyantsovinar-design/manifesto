@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '../../../lib/supabase';
+import { sendConfirmationEmail } from '../../../lib/email';
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
@@ -30,6 +31,16 @@ export async function POST(req) {
   if (error) {
     console.error(error);
     return NextResponse.json({ error: 'Could not seal the letter.' }, { status: 500 });
+  }
+
+  try {
+    await sendConfirmationEmail({
+      to: email.trim(),
+      name: name.trim(),
+      sealedUrl: `${process.env.SITE_URL}/sealed/${data.id}`
+    });
+  } catch (err) {
+    console.error('Confirmation email failed to send', err);
   }
 
   return NextResponse.json({ token: data.id });

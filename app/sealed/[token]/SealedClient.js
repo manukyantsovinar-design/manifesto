@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { M, Stage, Wordmark, Headline, Sub, Cta } from '../../Shell';
+import { M, Stage, Wordmark, Headline, Sub, Cta, useIsMobile } from '../../Shell';
+import { MPage, MWordmark, MHeadline, MSub, MCta } from '../../Mobile';
 
 function escapeHtml(s) {
   return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -40,6 +41,30 @@ export default function SealedClient({ letter, token }) {
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
+
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <MPage>
+        <MWordmark />
+        <MHeadline>It is sealed!</MHeadline>
+        <MSub>Your letter is safe. Now print it and put it somewhere your eyes go every morning. I believe in you!</MSub>
+        <div style={{ marginBottom: 28 }}>
+          <MCta label="Download the printable letter" onClick={() => printLetter(letter)} />
+        </div>
+        <div style={{ borderRadius: 15, background: M.cream, boxShadow: '4px 4px 22px 0px rgba(170,188,204,0.2)', padding: '22px 20px', marginBottom: 20 }}>
+          <p style={{ margin: '0 0 10px', fontFamily: M.alice, fontSize: 17, letterSpacing: '0.05em', color: M.navy }}>Your monthly check-in</p>
+          <p style={{ margin: '0 0 16px', fontFamily: M.aleo, fontSize: 13, lineHeight: '20px', color: 'rgba(64,45,43,0.9)' }}>Once a month you&rsquo;ll get a note at {letter.email || 'your inbox'} with three small questions. It always opens this private page, where your letter is waiting.</p>
+          <div style={{ borderRadius: 50, background: '#fff', boxShadow: '0 0 0 4px ' + M.sky, display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px' }}>
+            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: M.alef, fontSize: 11, letterSpacing: '0.03em', color: M.navy }}>{checkinUrl}</span>
+            <button onClick={copy} style={{ border: 0, background: 'transparent', cursor: 'pointer', flex: '0 0 auto', fontFamily: M.alice, fontSize: 12, letterSpacing: '0.06em', color: copied ? '#4A7A4A' : 'rgba(15,60,102,0.6)' }}>{copied ? 'Copied' : 'Copy'}</button>
+          </div>
+        </div>
+        <a href={`/checkin/${token}`} style={{ display: 'block', textAlign: 'center', fontFamily: M.aleo, fontStyle: 'italic', fontSize: 12, color: 'rgba(15,60,102,0.7)', textDecoration: 'none' }}>Preview the monthly check-in page</a>
+      </MPage>
+    );
+  }
 
   return (
     <Stage height={1024}>

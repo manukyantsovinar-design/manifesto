@@ -11,6 +11,22 @@ export const M = {
   img: '/imagery/'
 };
 
+export const MOBILE_BREAKPOINT = 720;
+
+/* Below the breakpoint, screens switch from the scaled 1440px stage to a
+   normal-flow mobile layout (see Mobile.js) so text stays a legible fixed
+   size instead of shrinking with the rest of the composition. */
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const f = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    f();
+    window.addEventListener('resize', f);
+    return () => window.removeEventListener('resize', f);
+  }, []);
+  return isMobile;
+}
+
 /* Authored at 1440px. Below that the whole stage scales down together so
    nothing reflows away from the composition. */
 export function Stage({ height, children }) {
