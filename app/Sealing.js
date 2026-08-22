@@ -1,0 +1,50 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { M, Stage, Wordmark, Headline } from './Shell';
+
+/* The sealing ceremony as a cross-fade: the open envelope with the blue card
+   dissolves into the card slipping further in, then into the closed envelope,
+   and finally the wax seal fades up on top. */
+const FRAMES = [
+  { src: 'envelope-open.png', left: 259, top: 209, width: 866 },
+  { src: 'envelope-closing.png', left: 402, top: 204, width: 598 },
+  { src: 'envelope-closed.png', left: 457, top: 396, width: 578 }
+];
+
+const CUES = [0, 1100, 2200];
+const SEAL_AT = 3100;
+const LEAVE_AT = 4600;
+const FADE = 900;
+
+export default function Sealing({ onDone }) {
+  const [t, setT] = useState(0);
+  useEffect(() => {
+    const timers = CUES.slice(1).concat([SEAL_AT]).map(ms => setTimeout(() => setT(ms), ms));
+    timers.push(setTimeout(() => onDone && onDone(), LEAVE_AT));
+    return () => timers.forEach(clearTimeout);
+  }, [onDone]);
+
+  const shown = CUES.reduce((acc, c, i) => (t >= c ? i : acc), 0);
+  return (
+    <Stage height={1024}>
+      <Wordmark />
+      <Headline>Almost there...</Headline>
+      {FRAMES.map((f, i) => (
+        <img key={f.src} src={M.img + f.src} alt="" style={{
+          position: 'absolute', left: f.left, top: f.top, width: f.width, height: 'auto',
+          filter: 'drop-shadow(5px 8px 20px rgba(0,0,0,0.22))',
+          opacity: i === shown ? 1 : 0,
+          transition: 'opacity ' + (i === shown ? 420 : FADE) + 'ms ease-out'
+        }} />
+      ))}
+      <img src={M.img + 'wax-seal-sun.png'} alt="" style={{
+        position: 'absolute', left: 687, top: 607, width: 114, height: 114,
+        filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.25))',
+        opacity: t >= SEAL_AT ? 1 : 0,
+        transform: 'scale(' + (t >= SEAL_AT ? 1 : 0.9) + ')',
+        transition: 'opacity 320ms ease-out, transform 420ms ease-out'
+      }} />
+    </Stage>
+  );
+}

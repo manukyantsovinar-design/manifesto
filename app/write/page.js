@@ -1,0 +1,82 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { M, Stage, Wordmark, Headline, Sub, Paper, Field, Cta, ruleStyle } from '../Shell';
+import Sealing from '../Sealing';
+
+const DREAMS = [
+  { key: 'want', title: 'This is what I want', hint: 'Say it plainly. Dreams get shy when we hedge.', placeholder: 'By this time next year...' },
+  { key: 'why', title: 'This is why I want it', hint: 'The real reason, not the polite one.', placeholder: 'I am meant for...' },
+  { key: 'give', title: 'This is what I am willing to give', hint: "Hours, comfort, old habits. Name what you'll trade.", placeholder: 'I am willing...' }
+];
+
+const BLANK = { name: '', want: '', why: '', give: '', email: '', consent: true };
+
+export default function WriteLetter() {
+  const router = useRouter();
+  const [letter, setLetter] = useState(BLANK);
+  const [touched, setTouched] = useState(false);
+  const [sealing, setSealing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [token, setToken] = useState(null);
+
+  const set = k => e => setLetter({ ...letter, [k]: e.target.value });
+  const ready = letter.name.trim() && letter.want.trim() && /.+@.+\..+/.test(letter.email) && letter.consent;
+
+  const seal = async e => {
+    e.preventDefault();
+    setTouched(true);
+    if (!ready || submitting) return;
+    setSubmitting(true);
+    setError('');
+    try {
+      const res = await fetch('/api/letters', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(letter)
+      });
+      if (!res.ok) throw new Error('Something went wrong sealing your letter. Please try again.');
+      const data = await res.json();
+      setToken(data.token);
+      setSealing(true);
+    } catch (err) {
+      setError(err.message);
+      setSubmitting(false);
+    }
+  };
+
+  if (sealing) {
+    return <Sealing onDone={() => router.push('/sealed/' + token)} />;
+  }
+
+  return (
+    <Stage height={1620}>
+      <Wordmark />
+      <Headline>Take your time</Headline>
+      <Sub top={218} width={700}>You&apos;ll write one short letter to yourself. What do you want, why you want it, and what you&apos;re willing to give for it.<br />Once a month I will check up on you.</Sub>
+      <Paper left={489} top={381} width={461} height={1169} />
+      <form onSubmit={seal}>
+        <div style={{ position: 'absolute', left: 522, top: 420, width: 387, height: 66 }}>
+          <label style={{ position: 'absolute', left: 0, top: 0, width: 387, fontFamily: M.alice, fontSize: 16, lineHeight: '100%', letterSpacing: '0.060em', color: M.navy }}>Dear</label>
+          <input value={letter.name} onChange={set('name')} placeholder="Your name" style={{ position: 'absolute', left: 0, top: 33, width: 387, height: 27, padding: 0, border: 0, outline: 'none', background: 'transparent', fontFamily: M.hand, fontSize: 22, lineHeight: '27px', letterSpacing: '0.080em', color: M.ink }} />
+          <div style={{ ...ruleStyle, left: 0, top: 66, width: 386 }} />
+        </div>
+        {DREAMS.map((d, i) => (
+          <Field key={d.key} left={522} top={490 + i * 264} height={246} title={d.title} hint={d.hint} placeholder={d.placeholder} value={letter[d.key]} onChange={set(d.key)} />
+        ))}
+        <span style={{ position: 'absolute', left: 518, top: 1345, width: 404, fontFamily: M.aleo, fontSize: 14, lineHeight: '100%', letterSpacing: '0.060em', color: M.navy }}>Where should your monthly check-in land?</span>
+        <input type="email" value={letter.email} onChange={set('email')} placeholder="you@gmail.com" style={{ position: 'absolute', left: 518, top: 1372, width: 404, height: 27, boxSizing: 'border-box', padding: '0 12px', borderRadius: 50, border: 0, outline: 'none', background: '#fff', boxShadow: '0 0 0 2.5px ' + M.sky, fontFamily: M.aleo, fontSize: 12, letterSpacing: '0.010em', color: 'rgba(64,45,43,0.9)' }} />
+        <div style={{ position: 'absolute', left: 522, top: 1408, width: 400, display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+          <input id="consent" type="checkbox" checked={letter.consent} onChange={e => setLetter({ ...letter, consent: e.target.checked })} style={{ width: 18, height: 18, margin: '2px 0 0', accentColor: M.navy, flex: '0 0 auto' }} />
+          <label htmlFor="consent" style={{ fontFamily: M.aleo, fontSize: 12, lineHeight: '17px', color: 'rgba(64,45,43,0.9)' }}>Once a month, send me three small questions about this dream — and remind me what I wrote here.</label>
+        </div>
+        <span style={{ position: 'absolute', left: 522, top: 1456, width: 400, fontFamily: M.aleo, fontStyle: 'italic', fontWeight: 300, fontSize: 10, color: 'rgba(64,45,43,0.7)' }}>Nothing is shared. This letter is only yours.</span>
+        {touched && !ready && <span style={{ position: 'absolute', left: 522, top: 1476, width: 400, fontFamily: M.aleo, fontSize: 11, color: '#7C2B2B' }}>Your name, the first answer, an email address and the monthly note — then it can be sealed.</span>}
+        {error && <span style={{ position: 'absolute', left: 522, top: 1476, width: 400, fontFamily: M.aleo, fontSize: 11, color: '#7C2B2B' }}>{error}</span>}
+        <Cta type="submit" label={submitting ? 'Sealing…' : 'Seal my letter'} left={601} top={1493} onClick={seal} disabled={submitting} />
+      </form>
+    </Stage>
+  );
+}

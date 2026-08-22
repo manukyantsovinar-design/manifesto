@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Freehand&family=Alice&family=Aleo:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Alef:wght@400;700&display=swap");
+
+html, body {
+  margin: 0;
+  background: #E9F4FF;
+}
+
+body {
+  color: #402D2B;
+  font-family: "Aleo", Georgia, serif;
+}
+
+a { color: #0F3C66; }
+a:hover { color: #1a5a94; }
+
+::placeholder { color: rgba(64,45,43,.45); opacity: 1; }
+:focus::placeholder { color: transparent; }
+
+button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid #0F3C66;
+  outline-offset: 3px;
+}
+
+@keyframes sunturn { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+@keyframes envfloat {
+  0%, 100% { transform: translate3d(0,0,0) rotate(0deg); }
+  50% { transform: translate3d(0,-12px,0) rotate(-.35deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; }
+}
