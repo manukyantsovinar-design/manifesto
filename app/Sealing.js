@@ -13,10 +13,10 @@ const FRAMES = [
   { src: 'envelope-closed.png', left: 457, top: 396, width: 578 }
 ];
 
-const CUES = [0, 1100, 2200];
-const SEAL_AT = 3100;
-const LEAVE_AT = 4600;
-const FADE = 900;
+const CUES = [0, 800, 1600];
+const SEAL_AT = 2200;
+const LEAVE_AT = 3100;
+const FADE = 650;
 
 export default function Sealing({ onDone }) {
   const [t, setT] = useState(0);
@@ -41,7 +41,7 @@ export default function Sealing({ onDone }) {
               transform: 'translate(-50%,-50%)',
               filter: 'drop-shadow(5px 8px 20px rgba(0,0,0,0.22))',
               opacity: i === shown ? 1 : 0,
-              transition: 'opacity ' + (i === shown ? 420 : FADE) + 'ms ease-out'
+              transition: 'opacity ' + (i === shown ? 320 : FADE) + 'ms ease-out'
             }} />
           ))}
           <img src={M.img + 'wax-seal-sun.png'} alt="" style={{
@@ -49,7 +49,7 @@ export default function Sealing({ onDone }) {
             transform: 'translate(-50%,-50%) scale(' + (t >= SEAL_AT ? 1 : 0.9) + ')',
             filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.25))',
             opacity: t >= SEAL_AT ? 1 : 0,
-            transition: 'opacity 320ms ease-out, transform 420ms ease-out'
+            transition: 'opacity 260ms ease-out, transform 320ms ease-out'
           }} />
         </div>
       </MPage>
@@ -65,7 +65,7 @@ export default function Sealing({ onDone }) {
           position: 'absolute', left: f.left, top: f.top, width: f.width, height: 'auto',
           filter: 'drop-shadow(5px 8px 20px rgba(0,0,0,0.22))',
           opacity: i === shown ? 1 : 0,
-          transition: 'opacity ' + (i === shown ? 420 : FADE) + 'ms ease-out'
+          transition: 'opacity ' + (i === shown ? 320 : FADE) + 'ms ease-out'
         }} />
       ))}
       <img src={M.img + 'wax-seal-sun.png'} alt="" style={{
@@ -73,7 +73,7 @@ export default function Sealing({ onDone }) {
         filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.25))',
         opacity: t >= SEAL_AT ? 1 : 0,
         transform: 'scale(' + (t >= SEAL_AT ? 1 : 0.9) + ')',
-        transition: 'opacity 320ms ease-out, transform 420ms ease-out'
+        transition: 'opacity 260ms ease-out, transform 320ms ease-out'
       }} />
     </Stage>
   );
