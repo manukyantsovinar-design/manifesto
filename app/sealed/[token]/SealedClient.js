@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { M, Stage, Wordmark, Headline, Sub, Cta, useIsMobile } from '../../Shell';
 import { MPage, MWordmark, MHeadline, MSub, MCta } from '../../Mobile';
 
@@ -66,7 +66,8 @@ async function downloadLetterPdf(letter) {
 export default function SealedClient({ letter, token }) {
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const checkinUrl = typeof window !== 'undefined' ? `${window.location.origin}/checkin/${token}` : `/checkin/${token}`;
+  const [checkinUrl, setCheckinUrl] = useState(`/checkin/${token}`);
+  useEffect(() => setCheckinUrl(`${window.location.origin}/checkin/${token}`), [token]);
 
   const copy = () => {
     navigator.clipboard && navigator.clipboard.writeText(checkinUrl);
