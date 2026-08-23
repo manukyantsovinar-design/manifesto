@@ -32,7 +32,7 @@ export default function Landing() {
               filter: 'drop-shadow(5px 5px 20px rgba(0,0,0,0.25))'
             }} />
             <p style={{
-              position: 'absolute', left: '33%', top: '33%', width: '40%', margin: 0, textAlign: 'center',
+              position: 'absolute', left: '33%', top: '30%', width: '40%', margin: 0, textAlign: 'center',
               fontFamily: M.hand, fontSize: 'clamp(10px, 3vw, 13px)', lineHeight: 1.25, letterSpacing: '0.04em',
               color: M.ink, textShadow: '1px 1px 2px rgba(245,245,245,0.49)'
             }}>Write down your crazy ideas and dreams here. I will make sure you follow through them...</p>
