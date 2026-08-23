@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { supabase } from '../../../lib/supabase';
 import SealedClient from './SealedClient';
 
@@ -13,6 +14,7 @@ export default async function SealedPage({ params }) {
     return (
       <div style={{ padding: 80, textAlign: 'center', fontFamily: 'Georgia, serif', color: '#402D2B' }}>
         <p>This letter could not be found.</p>
+        <Link href="/" style={{ color: '#0F3C66' }}>Back to Manifesto</Link>
       </div>
     );
   }

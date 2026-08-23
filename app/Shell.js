@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 /* Transcribed from the Manifesto Figma file via the design system export.
    Every number below is intentional — do not "clean up" the absolute positioning. */
@@ -56,7 +57,7 @@ export function Backdrop() {
 }
 
 export function Wordmark() {
-  return <span style={{ position: 'absolute', left: 0, top: 59, width: 1440, textAlign: 'center', fontFamily: M.alice, fontSize: 16, lineHeight: '100%', color: 'rgba(15,60,102,0.6)' }}>Manifesto by Tsovinar Manukyan</span>;
+  return <Link href="/" style={{ position: 'absolute', left: 0, top: 59, width: 1440, textAlign: 'center', fontFamily: M.alice, fontSize: 16, lineHeight: '100%', color: 'rgba(15,60,102,0.6)', textDecoration: 'none' }}>Manifesto by Tsovinar Manukyan</Link>;
 }
 
 export function Headline({ children, top = 95 }) {

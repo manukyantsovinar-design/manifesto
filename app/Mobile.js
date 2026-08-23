@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { M } from './Shell';
 
 /* Normal-flow mobile layout: fixed, legible font sizes and stacked content,
@@ -12,7 +13,7 @@ export function MPage({ children, maxWidth = 440 }) {
 }
 
 export function MWordmark() {
-  return <p style={{ textAlign: 'center', margin: '0 0 28px', fontFamily: M.alice, fontSize: 12, letterSpacing: '0.06em', color: 'rgba(15,60,102,0.6)' }}>Manifesto by Tsovinar Manukyan</p>;
+  return <Link href="/" style={{ display: 'block', textAlign: 'center', margin: '0 0 28px', fontFamily: M.alice, fontSize: 12, letterSpacing: '0.06em', color: 'rgba(15,60,102,0.6)', textDecoration: 'none' }}>Manifesto by Tsovinar Manukyan</Link>;
 }
 
 export function MHeadline({ children }) {

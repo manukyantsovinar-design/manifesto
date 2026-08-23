@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { supabase } from '../../../lib/supabase';
 import CheckInClient from './CheckInClient';
 
@@ -14,6 +15,7 @@ export default async function CheckInPage({ params }) {
     return (
       <div style={{ padding: 80, textAlign: 'center', fontFamily: 'Georgia, serif', color: '#402D2B' }}>
         <p>This check-in link is not valid.</p>
+        <Link href="/" style={{ color: '#0F3C66' }}>Back to Manifesto</Link>
       </div>
     );
   }
