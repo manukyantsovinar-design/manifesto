@@ -19,24 +19,31 @@ export default function Landing() {
         <MWordmark />
         <MHeadline>Write it Down</MHeadline>
         <MSub>Before it&rsquo;s gone</MSub>
-        <div style={{ position: 'relative', width: 'calc(100% + 32px)', margin: '28px -16px 0', aspectRatio: '1011.647 / 878.522', animation: 'envfloat 9s ease-in-out infinite' }}>
-          <img src={M.img + 'envelope-open-card.png'} alt="" style={{
-            position: 'absolute', left: 0, top: 0, width: '86.9%', height: '80.05%',
-            transform: 'translateX(17.5%) rotate(12.65deg)', transformOrigin: '0 0',
-            filter: 'drop-shadow(5px 5px 20px rgba(0,0,0,0.25))'
-          }} />
-          <p style={{
-            position: 'absolute', left: '33%', top: '25%', width: '40%', margin: 0, textAlign: 'center',
-            fontFamily: M.hand, fontSize: 'clamp(10px, 3vw, 13px)', lineHeight: 1.25, letterSpacing: '0.04em',
-            color: M.ink, textShadow: '1px 1px 2px rgba(245,245,245,0.49)'
-          }}>Write down your crazy ideas and dreams here. I will make sure you follow through them...</p>
-          <button onClick={go} title="Write my letter" style={{
-            position: 'absolute', left: '51%', top: '59%', width: '13%', aspectRatio: '1',
-            transform: 'translate(-50%, -50%)',
-            padding: 0, border: 0, borderRadius: '50%', background: 'transparent', cursor: 'pointer'
-          }}>
-            <img src={M.img + 'wax-seal-sun.png'} alt="Press the seal to begin" style={{ display: 'block', width: '100%', height: '100%', animation: 'sunturn 80s linear infinite', filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.25))' }} />
-          </button>
+        {/* Scaled up as a group on an unanimated wrapper — the envfloat
+            animation lives one level in, since a CSS animation targeting
+            `transform` would otherwise overwrite this static scale every
+            frame. `overflow-x:hidden` on <body> makes bleeding past the
+            screen edge safe: it clips instead of creating a scrollbar. */}
+        <div style={{ transform: 'scale(1.32)', transformOrigin: 'center' }}>
+          <div style={{ position: 'relative', width: 'calc(100% + 36px)', margin: '20px -18px 0', aspectRatio: '1011.647 / 878.522', animation: 'envfloat 9s ease-in-out infinite' }}>
+            <img src={M.img + 'envelope-open-card.png'} alt="" style={{
+              position: 'absolute', left: 0, top: 0, width: '86.9%', height: '80.05%',
+              transform: 'translateX(17.5%) rotate(12.65deg)', transformOrigin: '0 0',
+              filter: 'drop-shadow(5px 5px 20px rgba(0,0,0,0.25))'
+            }} />
+            <p style={{
+              position: 'absolute', left: '33%', top: '33%', width: '40%', margin: 0, textAlign: 'center',
+              fontFamily: M.hand, fontSize: 'clamp(10px, 3vw, 13px)', lineHeight: 1.25, letterSpacing: '0.04em',
+              color: M.ink, textShadow: '1px 1px 2px rgba(245,245,245,0.49)'
+            }}>Write down your crazy ideas and dreams here. I will make sure you follow through them...</p>
+            <button onClick={go} title="Write my letter" style={{
+              position: 'absolute', left: '51%', top: '59%', width: '13%', aspectRatio: '1',
+              transform: 'translate(-50%, -50%)',
+              padding: 0, border: 0, borderRadius: '50%', background: 'transparent', cursor: 'pointer'
+            }}>
+              <img src={M.img + 'wax-seal-sun.png'} alt="Press the seal to begin" style={{ display: 'block', width: '100%', height: '100%', animation: 'sunturn 80s linear infinite', filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.25))' }} />
+            </button>
+          </div>
         </div>
         <div style={{ marginTop: 32 }}>
           <MCta label="Write my letter" onClick={go} />
