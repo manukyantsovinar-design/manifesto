@@ -10,18 +10,33 @@ export default function Landing() {
   const isMobile = useIsMobile();
 
   if (isMobile) {
+    /* Same composition as desktop — note written on the card, seal on the
+       envelope flap — reproduced as percentages of a wrapper locked to the
+       envelope artwork's own aspect ratio, so it scales as one photo instead
+       of needing separate pixel math per screen size. */
     return (
       <MPage>
         <MWordmark />
         <MHeadline>Write it Down</MHeadline>
         <MSub>Before it&rsquo;s gone</MSub>
-        <img src={M.img + 'envelope-open-card.png'} alt="" style={{ display: 'block', width: '100%', maxWidth: 320, margin: '24px auto 0', filter: 'drop-shadow(5px 5px 20px rgba(0,0,0,0.2))' }} />
-        <div style={{ background: M.sky, borderRadius: 12, padding: '20px 22px', maxWidth: 320, margin: '20px auto 0', textAlign: 'center', fontFamily: M.hand, fontSize: 17, lineHeight: '25px', letterSpacing: '0.06em', color: M.ink }}>
-          Write down your crazy ideas and dreams here. I will make sure you follow through them...
+        <div style={{ position: 'relative', width: '100%', aspectRatio: '1011.647 / 878.522', margin: '28px auto 0', animation: 'envfloat 9s ease-in-out infinite' }}>
+          <img src={M.img + 'envelope-open-card.png'} alt="" style={{
+            position: 'absolute', left: 0, top: 0, width: '86.9%', height: '80.05%',
+            transform: 'translateX(17.5%) rotate(12.65deg)', transformOrigin: '0 0',
+            filter: 'drop-shadow(5px 5px 20px rgba(0,0,0,0.25))'
+          }} />
+          <p style={{
+            position: 'absolute', left: '33%', top: '25%', width: '40%', margin: 0,
+            fontFamily: M.hand, fontSize: 'clamp(9px, 2.7vw, 11px)', lineHeight: 1.25, letterSpacing: '0.04em',
+            color: M.ink, textShadow: '1px 1px 2px rgba(245,245,245,0.49)'
+          }}>Write down your crazy ideas and dreams here. I will make sure you follow through them...</p>
+          <button onClick={go} title="Write my letter" style={{
+            position: 'absolute', left: '50%', top: '61%', width: '12%', aspectRatio: '1',
+            padding: 0, border: 0, borderRadius: '50%', background: 'transparent', cursor: 'pointer'
+          }}>
+            <img src={M.img + 'wax-seal-sun.png'} alt="Press the seal to begin" style={{ display: 'block', width: '100%', height: '100%', animation: 'sunturn 80s linear infinite', filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.25))' }} />
+          </button>
         </div>
-        <button onClick={go} title="Write my letter" style={{ display: 'block', margin: '24px auto 0', width: 84, height: 84, padding: 0, border: 0, borderRadius: '50%', background: 'transparent', cursor: 'pointer' }}>
-          <img src={M.img + 'wax-seal-sun.png'} alt="Press the seal to begin" style={{ display: 'block', width: '100%', height: '100%', filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.25))' }} />
-        </button>
         <div style={{ marginTop: 32 }}>
           <MCta label="Write my letter" onClick={go} />
         </div>

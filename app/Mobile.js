@@ -23,14 +23,15 @@ export function MSub({ children }) {
   return <p style={{ margin: '0 0 32px', textAlign: 'center', fontFamily: M.alice, fontSize: 15, lineHeight: 1.6, letterSpacing: '0.02em', color: M.navy }}>{children}</p>;
 }
 
+/* The deckle filter must only ever touch a plain background layer, never an
+   element that also contains text — feDisplacementMap distorts every pixel
+   it paints, letters included, which is what made mobile text look wobbly. */
 export function MPaper({ children, style }) {
   return (
-    <div style={{
-      position: 'relative', borderRadius: 3, background: M.cream, boxSizing: 'border-box',
-      filter: 'url(#deckle) drop-shadow(3px 5px 12px rgba(170,188,204,0.35))',
-      boxShadow: 'inset 0 0 0 12px ' + M.cream + ', 0 0 0 12px ' + M.cream,
-      padding: '28px 20px', marginBottom: 28, ...style
-    }}>{children}</div>
+    <div style={{ position: 'relative', boxSizing: 'border-box', padding: '28px 20px', marginBottom: 28, ...style }}>
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, borderRadius: 3, background: M.cream, filter: 'url(#deckle) drop-shadow(3px 5px 12px rgba(170,188,204,0.35))' }} />
+      <div style={{ position: 'relative' }}>{children}</div>
+    </div>
   );
 }
 
