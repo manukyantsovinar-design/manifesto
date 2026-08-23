@@ -119,7 +119,7 @@ export default function WriteLetter() {
       <Wordmark />
       <Headline>Take your time</Headline>
       <Sub top={218} width={700}>You&apos;ll write one short letter to yourself. What do you want, why you want it, and what you&apos;re willing to give for it.<br />Once a month I will check up on you.</Sub>
-      <Paper left={489} top={381} width={461} height={1169} />
+      <Paper left={489} top={381} width={461} height={1278} />
       <form onSubmit={seal}>
         <div style={{ position: 'absolute', left: 522, top: 420, width: 387, height: 66 }}>
           <label style={{ position: 'absolute', left: 0, top: 0, width: 387, fontFamily: M.alice, fontSize: 16, lineHeight: '100%', letterSpacing: '0.060em', color: M.navy }}>Dear</label>
