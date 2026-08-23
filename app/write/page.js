@@ -2,9 +2,28 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Script from 'next/script';
 import { M, Stage, Wordmark, Headline, Sub, Paper, Field, Cta, ruleStyle, useIsMobile } from '../Shell';
 import { MPage, MWordmark, MHeadline, MSub, MPaper, MField, MCta } from '../Mobile';
 import Sealing from '../Sealing';
+
+/* Cloudflare Turnstile: invisible/one-click bot check. The widget calls
+   window.onTurnstileVerified once solved; we hold that token and send it
+   along with the letter for server-side verification in /api/letters. */
+function TurnstileWidget({ onVerified }) {
+  if (typeof window !== 'undefined') window.onTurnstileVerified = onVerified;
+  return (
+    <>
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
+      <div
+        className="cf-turnstile"
+        data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+        data-callback="onTurnstileVerified"
+        data-theme="light"
+      />
+    </>
+  );
+}
 
 const DREAMS = [
   { key: 'want', title: 'This is what I want', hint: 'Say it plainly. Dreams get shy when we hedge.', placeholder: 'By this time next year...' },
@@ -22,6 +41,7 @@ export default function WriteLetter() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [token, setToken] = useState(null);
+  const [captchaToken, setCaptchaToken] = useState('');
   const isMobile = useIsMobile();
 
   const set = k => e => setLetter({ ...letter, [k]: e.target.value });
@@ -31,13 +51,17 @@ export default function WriteLetter() {
     e.preventDefault();
     setTouched(true);
     if (!ready || submitting) return;
+    if (!captchaToken) {
+      setError('Please complete the check above so we know you’re not a robot.');
+      return;
+    }
     setSubmitting(true);
     setError('');
     try {
       const res = await fetch('/api/letters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(letter)
+        body: JSON.stringify({ ...letter, turnstileToken: captchaToken })
       });
       if (!res.ok) throw new Error('Something went wrong sealing your letter. Please try again.');
       const data = await res.json();
@@ -46,6 +70,8 @@ export default function WriteLetter() {
     } catch (err) {
       setError(err.message);
       setSubmitting(false);
+      setCaptchaToken('');
+      if (typeof window !== 'undefined' && window.turnstile) window.turnstile.reset();
     }
   };
 
@@ -78,6 +104,9 @@ export default function WriteLetter() {
             <span style={{ display: 'block', fontFamily: M.aleo, fontStyle: 'italic', fontWeight: 300, fontSize: 11, color: 'rgba(64,45,43,0.7)', marginBottom: 8 }}>Nothing is shared. This letter is only yours.</span>
             {touched && !ready && <span style={{ display: 'block', fontFamily: M.aleo, fontSize: 12, color: '#7C2B2B', marginBottom: 8 }}>Your name, the first answer, an email address and the monthly note — then it can be sealed.</span>}
             {error && <span style={{ display: 'block', fontFamily: M.aleo, fontSize: 12, color: '#7C2B2B', marginBottom: 8 }}>{error}</span>}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+              <TurnstileWidget onVerified={setCaptchaToken} />
+            </div>
           </MPaper>
           <MCta type="submit" label={submitting ? 'Sealing…' : 'Seal my letter'} onClick={seal} disabled={submitting} />
         </form>
@@ -86,7 +115,7 @@ export default function WriteLetter() {
   }
 
   return (
-    <Stage height={1620}>
+    <Stage height={1705}>
       <Wordmark />
       <Headline>Take your time</Headline>
       <Sub top={218} width={700}>You&apos;ll write one short letter to yourself. What do you want, why you want it, and what you&apos;re willing to give for it.<br />Once a month I will check up on you.</Sub>
@@ -109,7 +138,10 @@ export default function WriteLetter() {
         <span style={{ position: 'absolute', left: 522, top: 1456, width: 400, fontFamily: M.aleo, fontStyle: 'italic', fontWeight: 300, fontSize: 10, color: 'rgba(64,45,43,0.7)' }}>Nothing is shared. This letter is only yours.</span>
         {touched && !ready && <span style={{ position: 'absolute', left: 522, top: 1476, width: 400, fontFamily: M.aleo, fontSize: 11, color: '#7C2B2B' }}>Your name, the first answer, an email address and the monthly note — then it can be sealed.</span>}
         {error && <span style={{ position: 'absolute', left: 522, top: 1476, width: 400, fontFamily: M.aleo, fontSize: 11, color: '#7C2B2B' }}>{error}</span>}
-        <Cta type="submit" label={submitting ? 'Sealing…' : 'Seal my letter'} left={601} top={1493} onClick={seal} disabled={submitting} />
+        <div style={{ position: 'absolute', left: 572, top: 1500 }}>
+          <TurnstileWidget onVerified={setCaptchaToken} />
+        </div>
+        <Cta type="submit" label={submitting ? 'Sealing…' : 'Seal my letter'} left={601} top={1578} onClick={seal} disabled={submitting} />
       </form>
     </Stage>
   );

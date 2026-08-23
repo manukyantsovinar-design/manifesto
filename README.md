@@ -21,6 +21,8 @@ npm run dev
 | `EMAIL_FROM` | e.g. `Manifesto <letters@yourdomain>` — the address must be on a domain verified in Resend |
 | `SITE_URL` | The site's public URL, e.g. `https://manifesto.yourdomain.com` |
 | `CRON_SECRET` | Any random string you generate — protects the email-sending endpoint |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare → Turnstile → Add site → copy the "Site Key" |
+| `TURNSTILE_SECRET_KEY` | Same Turnstile site → copy the "Secret Key" |
 
 ## Database
 
