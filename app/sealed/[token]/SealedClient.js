@@ -26,7 +26,7 @@ async function downloadLetterPdf(letter) {
   ).join('');
 
   const sheet = document.createElement('div');
-  sheet.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;box-sizing:border-box;padding:75px 68px;background:#F6F0E4;color:#402D2B;';
+  sheet.style.cssText = 'position:absolute;left:0;top:0;z-index:-1;pointer-events:none;width:794px;min-height:1123px;box-sizing:border-box;padding:75px 68px;background:#F6F0E4;color:#402D2B;';
   sheet.innerHTML =
     '<p style="font-family:Alice,serif;font-size:14px;color:rgba(15,60,102,.6);text-align:center;margin:0 0 40px;">Manifesto by Tsovinar Manukyan</p>' +
     '<h1 style="font-family:Freehand,cursive;font-weight:400;font-size:44px;letter-spacing:.06em;margin:0 0 34px;color:#402D2B;">Dear ' + escapeHtml(letter.name) + '</h1>' +
@@ -48,6 +48,8 @@ async function downloadLetterPdf(letter) {
     let heightLeft = imgH;
     let position = 0;
     pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
+    const ptPerPx = imgW / 794;
+    pdf.link(0, 75 * ptPerPx, imgW, 22 * ptPerPx, { url: 'https://www.instagram.com/tsovinnar_/' });
     heightLeft -= pageH;
     while (heightLeft > 0) {
       position -= pageH;
