@@ -29,7 +29,7 @@ async function downloadLetterPdf(letter) {
   sheet.style.cssText = 'position:absolute;left:0;top:0;z-index:-1;pointer-events:none;width:794px;min-height:1123px;box-sizing:border-box;padding:75px 68px;background:#F6F0E4;color:#402D2B;';
   sheet.innerHTML =
     '<p style="font-family:Alice,serif;font-size:14px;color:rgba(15,60,102,.6);text-align:center;margin:0 0 40px;">Manifesto by Tsovinar Manukyan</p>' +
-    '<h1 style="font-family:Freehand,cursive;font-weight:400;font-size:44px;letter-spacing:.06em;margin:0 0 34px;color:#402D2B;">Dear ' + escapeHtml(letter.name) + '</h1>' +
+    '<h1 style="font-family:Freehand,cursive;font-weight:400;font-size:44px;letter-spacing:.06em;margin:0 0 34px;color:#402D2B;">Dear future ' + escapeHtml(letter.name) + '</h1>' +
     rows +
     '<p style="font-family:Aleo,serif;font-style:italic;font-size:13px;color:rgba(64,45,43,.75);margin-top:24px;">Sealed ' + new Date(letter.created_at).toLocaleDateString() + '</p>';
   document.body.appendChild(sheet);

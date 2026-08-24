@@ -34,7 +34,7 @@ function LetterSheet({ letter, checkins, onHeight }) {
   return (
     <div ref={ref} style={{ position: 'absolute', left: 495, top: 331, width: 451, minHeight: LETTER_BASE, boxSizing: 'border-box', padding: '28px 27px' }}>
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, borderRadius: 3, background: M.cream, filter: 'url(#deckle) drop-shadow(3px 5px 12px rgba(170,188,204,0.35))', boxShadow: 'inset 0 0 0 15px ' + M.cream + ', 0 0 0 15px ' + M.cream }} />
-      <div style={{ ...hand, margin: 0, position: 'relative' }}>Dear, {letter.name || 'Name'}</div>
+      <div style={{ ...hand, margin: 0, position: 'relative' }}>Dear future, {letter.name || 'Name'}</div>
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 30, marginTop: 8 }}>
         {rows.map(([t, v]) => (
           <div key={t}>
@@ -81,7 +81,7 @@ function MLetterSheet({ letter, checkins }) {
   ];
   return (
     <MPaper>
-      <div style={{ ...hand, margin: 0 }}>Dear, {letter.name || 'Name'}</div>
+      <div style={{ ...hand, margin: 0 }}>Dear future, {letter.name || 'Name'}</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginTop: 8 }}>
         {rows.map(([t, v]) => (
           <div key={t}>

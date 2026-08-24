@@ -88,7 +88,7 @@ export default function WriteLetter() {
         <form onSubmit={seal}>
           <MPaper>
             <div style={{ marginBottom: 26 }}>
-              <label style={{ display: 'block', fontFamily: M.alice, fontSize: 14, letterSpacing: '0.05em', color: M.navy, marginBottom: 8 }}>Dear</label>
+              <label style={{ display: 'block', fontFamily: M.alice, fontSize: 14, letterSpacing: '0.05em', color: M.navy, marginBottom: 8 }}>Dear future</label>
               <input value={letter.name} onChange={set('name')} placeholder="Your name" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: 0, border: 0, outline: 'none', background: 'transparent', fontFamily: M.hand, fontSize: 20, letterSpacing: '0.06em', color: M.ink }} />
               <div style={{ height: 0, borderTop: '0.5px solid rgba(64,45,43,0.3)', marginTop: 8 }} />
             </div>
@@ -122,7 +122,7 @@ export default function WriteLetter() {
       <Paper left={489} top={381} width={461} height={1278} />
       <form onSubmit={seal}>
         <div style={{ position: 'absolute', left: 522, top: 420, width: 387, height: 66 }}>
-          <label style={{ position: 'absolute', left: 0, top: 0, width: 387, fontFamily: M.alice, fontSize: 16, lineHeight: '100%', letterSpacing: '0.060em', color: M.navy }}>Dear</label>
+          <label style={{ position: 'absolute', left: 0, top: 0, width: 387, fontFamily: M.alice, fontSize: 16, lineHeight: '100%', letterSpacing: '0.060em', color: M.navy }}>Dear future</label>
           <input value={letter.name} onChange={set('name')} placeholder="Your name" style={{ position: 'absolute', left: 0, top: 33, width: 387, height: 27, padding: 0, border: 0, outline: 'none', background: 'transparent', fontFamily: M.hand, fontSize: 22, lineHeight: '27px', letterSpacing: '0.080em', color: M.ink }} />
           <div style={{ ...ruleStyle, left: 0, top: 66, width: 386 }} />
         </div>
